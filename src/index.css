@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #14b8b8;
+    --color-secondary: #90a1b9;
+    --color-background-light: #f6f8f8;
+    --color-background-dark: #112121;
+    --color-oud-wood: #1a1614;
+    --color-desert-sand: #d2b48c;
+    --color-desert-dark-sand: #82945c;
+    
+    --font-display: "Be Vietnam Pro";
+    
+    --radius-DEFAULT: 1rem;
+    --radius-lg: 2rem;
+    --radius-xl: 3rem;
+    --radius-full: 9999px;
+    
+    --color-dark: #112121;
+}
+
+body {
+    font-family: var(--font-display);
+}
+
+.glow {
+    @apply focus:shadow-[0_0_15px_rgba(20,184,184,0.4)];
+}
+
+.label {
+    @apply text-xs font-semibold uppercase inline-block tracking-wider dark:text-desert-sand/80 text-primary ml-4;
+}
+
+.input {
+    @apply w-full block placeholder:text-[.6rem] lg:placeholder:text-xs dark:bg-oud-wood/50 bg-white border dark:border-primary/20 border-primary rounded-full py-2 px-6 dark:text-white text-secondary placeholder:text-slate-600 focus:outline-none focus:border-primary focus:shadow-[0_0_15px_rgba(20,184,184,0.4)] transition-all;
+}
+
+.btn {
+    @apply dark:bg-desert-sand dark:hover:bg-desert-sand/90 bg-primary hover:bg-primary/90 dark:text-background-dark text-background-light font-bold p-4 rounded-full transition-all text-center shadow-lg shadow-primary/20;
+}
+
+.glass-back {
+    @apply backdrop-blur-xl border dark:border-[rgba(20,184,184,0.3)] border-[rgba(5,39,39,0.8)] shadow-[0_0_40px_rgba(20,184,184,0.1)];
+}
+
+.pattern-overlay {
+    mask-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 0 L61 39 L100 50 L61 61 L50 100 L39 61 L0 50 L39 39 Z" fill="white" /></svg>');
+    mask-size: 40px;
+}
+
+.input-select {
+    @apply appearance-none w-4 h-4 rounded-full border border-primary/20 bg-background-dark dark:bg-background-light text-primary focus:ring-2 focus:ring-primary/30  checked:bg-primary dark:checked:bg-primary checked:border-primary cursor-pointer relative checked:after:content-['✓'] checked:after:absolute checked:after:inset-0 checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-white checked:after:text-xs;
+}
+
+@keyframes shrink {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
+
+@plugin './hero.js';
+/* Note: You may need to change the path to fit your project structure */
+@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
