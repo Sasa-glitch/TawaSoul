@@ -14,7 +14,8 @@ import {
     faPenToSquare,
     faTrashCan,
     faTriangleExclamation,
-    faArrowUpRightFromSquare 
+    faArrowUpRightFromSquare,
+    faRotateRight,
 } from "@fortawesome/free-solid-svg-icons";
 import {
     Card,
@@ -101,7 +102,11 @@ export default function AppCard(props) {
             },
         );
     };
-    const { data, refetch: getComments } = useQuery({
+    const {
+        data,
+        refetch: getComments,
+        isPending: commentsPending,
+    } = useQuery({
         queryFn: getCommentsPromise,
         queryKey: ["allComments", post.id],
         enabled: false,
@@ -113,7 +118,11 @@ export default function AppCard(props) {
     const [isBoxOpen, setIsBoxOpen] = useState(false);
     // handel book marking
     const [isBooked, setIsBooked] = useState(post.bookmarked);
-    const { mutate: bookPost, isPending: bookPending } = useMutation({
+    const {
+        mutate: bookPost,
+        isPending: bookPending,
+        isError,
+    } = useMutation({
         mutationFn: () => {
             return axios.put(
                 `https://route-posts.routemisr.com/posts/${post.id}/bookmark`,
@@ -187,7 +196,7 @@ export default function AppCard(props) {
     // create share function query
     const { isPending: sharePending, mutate: sharePostFn } = useMutation({
         mutationFn: () => {
-            const shareBody = sharedText ? {body : sharedText} : null
+            const shareBody = sharedText ? { body: sharedText } : null;
             return axios.post(
                 `https://route-posts.routemisr.com/posts/${post.id}/share`,
                 shareBody,
@@ -199,20 +208,21 @@ export default function AppCard(props) {
             );
         },
     });
+
     return (
         <>
-            <Card className="max-w-150">
+            <Card>
                 <CardHeader className="justify-between">
                     <div className="flex gap-5">
                         <Avatar
                             isBordered
                             radius="full"
                             size="md"
-                            src={post.user.photo}
+                            src={post.user?.photo}
                         />
                         <div className="flex flex-col gap-1 items-start justify-center">
                             <h4 className="text-small font-semibold leading-none text-default-600">
-                                {post.user.name}
+                                {post.user?.name}
                             </h4>
                             <div>
                                 <span className="text-small tracking-tight text-default-600">
@@ -373,32 +383,38 @@ export default function AppCard(props) {
                     )}
                 </CardBody>
                 {/* shared post area */}
-                {post.isShare && (
+                {post.isShare && post.sharedPost && (
                     <div className="mx-4 my-3 overflow-hidden rounded-xl border border-default-200 bg-default-50">
                         <div className="p-3">
                             {/* Header */}
                             <div className="mb-2 flex items-center gap-2">
                                 <Avatar
-                                    src={post.sharedPost.user.photo}
-                                    alt={post.sharedPost.user.name}
+                                    src={post.sharedPost.user?.photo}
+                                    alt={post.sharedPost.user?.name}
                                     size="sm"
                                     radius="full"
                                 />
                                 <div className="min-w-0">
                                     <p className="truncate text-sm font-bold text-default-900">
-                                        {post.sharedPost.user.name}
+                                        {post.sharedPost.user?.name}
                                     </p>
                                     <p className="truncate text-xs text-default-500">
-                                        {post.sharedPost.user.username ? `@${post.sharedPost.user.username}` : post.sharedPost.user.name }
+                                        {post.sharedPost.user?.username
+                                            ? `@${post.sharedPost.user?.username}`
+                                            : post.sharedPost.user?.name}
                                     </p>
                                 </div>
-                                <Link  to={`/posts/${post.sharedPost._id}`} onClick={() => window.scrollTo(0,0)}>
-                                    <button className="ml-auto inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-primary transition hover:bg-primary/10">
-                                    Original Post
-                                    <FontAwesomeIcon
-                                        icon={faArrowUpRightFromSquare}
-                                        className="h-3 w-3"
-                                    />
+                                <Link
+                                    to={`/posts/${post.sharedPost?._id}`}
+                                    onClick={() => window.scrollTo(0, 0)}
+                                    className="ml-auto "
+                                >
+                                    <button className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-primary transition hover:bg-primary/10">
+                                        Original Post
+                                        <FontAwesomeIcon
+                                            icon={faArrowUpRightFromSquare}
+                                            className="h-3 w-3"
+                                        />
                                     </button>
                                 </Link>
                             </div>
@@ -519,12 +535,45 @@ export default function AppCard(props) {
                     </div>
                 )}
                 {/* comments sections */}
-                {commentOpened && !data && (
-                    <Spinner
-                        classNames={{ label: "text-foreground mt-4" }}
-                        label="Loading"
-                        variant="spinner"
-                    />
+                {commentOpened && commentsPending && (
+                    <CardFooter className="flex justify-center">
+                        <Spinner
+                            classNames={{ label: "text-default-600 mt-4" }}
+                            label="Loading"
+                            variant="spinner"
+                        />
+                    </CardFooter>
+                )}
+                {commentOpened && isError && (
+                    <CardFooter>
+                        <div className="rounded-2xl border border-slate-200 bg-background-light p-6 shadow-sm dark:border-white/10 dark:bg-background-dark">
+                            <div className="flex flex-col items-center justify-center gap-3 py-4 text-center">
+                                <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-danger/10 text-danger">
+                                    <FontAwesomeIcon
+                                        icon={faCircleExclamation}
+                                        className="text-xl"
+                                    />
+                                </span>
+                                <div>
+                                    <p className="font-bold text-default-900">
+                                        Failed to load comments
+                                    </p>
+                                    <p className="mt-0.5 text-sm text-default-500">
+                                        Something went wrong while fetching
+                                        comments. Please try again.
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={getComments}
+                                    type="button"
+                                    className="mt-1 inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-default-600 transition hover:bg-slate-100 dark:border-white/10 dark:hover:bg-white/5"
+                                >
+                                    <FontAwesomeIcon icon={faRotateRight} />
+                                    Try again
+                                </button>
+                            </div>
+                        </div>
+                    </CardFooter>
                 )}
                 {commentOpened && data && (
                     <CommentSection

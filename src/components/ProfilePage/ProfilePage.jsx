@@ -49,13 +49,9 @@ export default function ProfilePage() {
         console.log("user from api", user);
         return (
             <>
-                <div className="mx-auto max-w-7xl px-3 py-3.5">
-                    <main className="min-w-0">
-                        <div className="space-y-5 sm:space-y-6">
-                            <ProfileHeader user={user} token={token} />
-                            <ProfilePosts userid={userid} token={token} />
-                        </div>
-                    </main>
+                <div className="space-y-5 sm:space-y-6">
+                    <ProfileHeader user={user} token={token} />
+                    <ProfilePosts userid={userid} token={token} />
                 </div>
             </>
         );
@@ -433,13 +429,13 @@ function ProfilePosts({ userid, token }) {
                     const isLiked = post.likes.includes(userid);
                     // console.log("compare, likes, id", post.likes.includes(user_id), post.likes, user_id)
                     return (
-                            <PostCard
-                                post={post}
-                                key={post.id}
-                                isLiked={isLiked}
-                                refetch={refetch}
-                                isUsers={post.user._id === userid}
-                            />
+                        <PostCard
+                            post={post}
+                            key={post.id}
+                            isLiked={isLiked}
+                            refetch={refetch}
+                            isUsers={post.user._id === userid}
+                        />
                     );
                 })}
             </>
@@ -480,7 +476,7 @@ function ProfilePosts({ userid, token }) {
             <>
                 <div className="rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3 max-w-80 m-auto text-center mb-5">
                     <p className="text-xs font-bold uppercase tracking-wide text-primary/80">
-                    Booked Posts
+                        Booked Posts
                     </p>
                     <p className="mt-1 text-2xl font-black text-default-900">
                         {bookedPosts.length}

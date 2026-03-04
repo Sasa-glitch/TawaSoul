@@ -14,6 +14,8 @@ import { useContext } from "react";
 import { authObject } from "../../context/TokenContext/TokenContext";
 import { Link } from "react-router-dom";
 import DarkModeToggle from './../DarkModeButton/DarkModeButton';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRightFromBracket, faAddressBook, faGear } from "@fortawesome/free-solid-svg-icons";
 
 export const AcmeLogo = () => {
   return (
@@ -73,13 +75,18 @@ export default function App() {
                 <p className="font-semibold">Signed in as</p>
                 <p className="font-semibold">@{user?.username || user?.name}</p>
                 </DropdownItem>
-                <DropdownItem key="profile" color="danger">
+                <DropdownItem key="profile" color="default">
+                    <Link to='/settings' className="w-full h-full block -my-2  py-2">
+                        <FontAwesomeIcon icon={faGear} className="me-1"/> Settings
+                    </Link>
+                </DropdownItem>
+                <DropdownItem key="profile" color="default">
                     <Link to='/profile' className="w-full h-full block -my-2  py-2">
-                        Profile
+                        <FontAwesomeIcon icon={faAddressBook} className="me-1"/> Profile
                     </Link>
                 </DropdownItem>
                 <DropdownItem key="logout" color="danger" onClick={clearToken}>
-                Log Out
+                    <FontAwesomeIcon icon={faArrowRightFromBracket} className="me-1"/> Log Out
                 </DropdownItem>
                 <DropdownItem >
                     <Divider />
