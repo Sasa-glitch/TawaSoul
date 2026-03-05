@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { authObject } from "../../context/TokenContext/TokenContext";
@@ -14,12 +14,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import PostCard from "../postCard/PostCard";
 import tawaSoulLogo from "../../assets/tawasoulIcon.png";
+import { Spinner } from "@heroui/react";
+import { createPortal } from "react-dom";
 
 export default function ProfilePage() {
     // states
     const {
         token,
         user: { _id: userid },
+        updateUser,
     } = useContext(authObject);
     const getUserProfile = () => {
         return axios.get(
@@ -34,13 +37,21 @@ export default function ProfilePage() {
     const { data, isPending, isSuccess, isError, error } = useQuery({
         queryKey: ["Users Profile"],
         queryFn: getUserProfile,
+        onSuccess: (data) => {
+            console.log("sucess data", data);
+        },
     });
+    useEffect(() => {
+        if (data) {
+            const user = data.data.data.user;
+            updateUser(user);
+        }
+    }, [data]);
     if (isPending) {
         return <p>Loading</p>;
     }
     if (isError) {
         console.error(error);
-
         return <p>Error</p>;
     }
     if (isSuccess) {
@@ -81,8 +92,9 @@ function ProfileHeader({ user, token }) {
         setPhotoInput(null);
         URL.revokeObjectURL(photoInputPreview);
     };
+    const queryClient = useQueryClient();
     // mutation function
-    const { mutate: updatePhoto } = useMutation({
+    const { mutate: updatePhoto, isPending } = useMutation({
         mutationFn: () => {
             photoFormData.append("photo", photoInput);
             return axios.put(
@@ -94,6 +106,10 @@ function ProfileHeader({ user, token }) {
                     },
                 },
             );
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["Users Profile"] });
+            setPhotoInputPreview(null);
         },
     });
     return (
@@ -258,6 +274,7 @@ function ProfileHeader({ user, token }) {
                     photoPreview={photoInputPreview}
                     closeFn={clearPhoto}
                     updatePhoto={updatePhoto}
+                    updating={isPending}
                 />
             )}
         </>
@@ -292,8 +309,8 @@ function PhotoModel({ src = null, alt = null, isOpen = false, closeOpen }) {
     );
 }
 
-function UploadPhotoModel({ photoPreview, closeFn, updatePhoto }) {
-    return (
+function UploadPhotoModel({ photoPreview, closeFn, updatePhoto, updating }) {
+    return createPortal(
         <>
             <div
                 onClick={(e) =>
@@ -374,16 +391,27 @@ function UploadPhotoModel({ photoPreview, closeFn, updatePhoto }) {
                             Cancel
                         </button>
                         <button
+                            disabled={updating}
                             onClick={updatePhoto}
                             type="button"
-                            className="inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white transition hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="cursor-pointer inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white transition hover:bg-primary/80 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            Save photo
+                            {updating ? (
+                                <Spinner
+                                    classNames={{
+                                        circle1: "border-b-white",
+                                        circle2: "border-b-white",
+                                    }}
+                                    variant="spinner"
+                                />
+                            ) : (
+                                "Save photo"
+                            )}
                         </button>
                     </div>
                 </div>
             </div>
-        </>
+        </>, document.body
     );
 }
 
