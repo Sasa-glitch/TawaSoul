@@ -35,39 +35,44 @@ export default function Home() {
     });
     // make empty posts variable for now
     let posts = ""
+    // names short cuts
+    const feedEP = "posts/feed?only=following&limit=50";
+    const myPostsEP = `users/${user_id}/posts`;
+    const communityEP = "posts";
+    const savedEp = "users/bookmarks"
     return (
         <>
             <div className="grid gap-4 xl:grid-cols-[240px_minmax(0,1fr)_300px]">
                 <aside className="hidden h-fit space-y-3 xl:sticky xl:top-21 xl:block">
                     <div className="rounded-2xl border border-slate-200 bg-background-light p-3 shadow-sm dark:border-white/10 dark:bg-background-dark">
                         <button
-                            onClick={() => {setShow("posts/feed?only=following&limit=50"); window.scrollTo({top:0, behavior: "smooth"})}}
-                            className="cursor-pointer flex w-full items-center gap-3 rounded-xl bg-primary/10 px-3 py-2 text-left text-sm font-bold text-primary transition"
+                            onClick={() => {setShow(feedEP); window.scrollTo({top:0, behavior: "smooth"})}}
+                            className={`cursor-pointer flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-bold transition ${show === feedEP ? "bg-primary/10 text-primary" : "text-default-700  hover:bg-slate-100 dark:hover:bg-white/5"} `}
                         >
                             <FontAwesomeIcon icon={faNewspaper} />
                             Feed
                         </button>
 
                         <button
-                            onClick={() => {setShow(`users/${user_id}/posts`); window.scrollTo({top:0, behavior: "smooth"})}}
-                            className="cursor-pointer mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-bold text-default-700 transition hover:bg-slate-100 dark:hover:bg-white/5"
+                            onClick={() => {setShow(myPostsEP); window.scrollTo({top:0, behavior: "smooth"})}}
+                            className={`cursor-pointer flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-bold transition ${show === myPostsEP ? "bg-primary/10 text-primary" : "text-default-700  hover:bg-slate-100 dark:hover:bg-white/5"} `}
                         >
                             <FontAwesomeIcon icon={faUser} />
                             My Posts
                         </button>
 
                         <button
-                            onClick={() => {setShow("posts"); window.scrollTo({top:0, behavior: "smooth"})}}
-                            className="cursor-pointer mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-bold text-default-700 transition hover:bg-slate-100 dark:hover:bg-white/5"
+                            onClick={() => {setShow(communityEP); window.scrollTo({top:0, behavior: "smooth"})}}
+                            className={`cursor-pointer flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-bold transition ${show === communityEP ? "bg-primary/10 text-primary" : "text-default-700  hover:bg-slate-100 dark:hover:bg-white/5"} `}
                         >
                             <FontAwesomeIcon icon={faEarth} />
                             Community
                         </button>
 
                         <button
-                            onClick={() => {setShow("users/bookmarks"); window.scrollTo({top:0, behavior: "smooth"})}}
-                            className="cursor-pointer mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-bold text-default-700 transition hover:bg-slate-100 dark:hover:bg-white/5"
-                        >
+                            onClick={() => {setShow(savedEp); window.scrollTo({top:0, behavior: "smooth"})}}
+                            className={`cursor-pointer flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-bold transition ${show === savedEp ? "bg-primary/10 text-primary" : "text-default-700  hover:bg-slate-100 dark:hover:bg-white/5"} `}
+                            >
                             <FontAwesomeIcon icon={faBookmark} />
                             Saved
                         </button>

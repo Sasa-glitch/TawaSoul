@@ -207,6 +207,7 @@ export default function AppCard(props) {
                 },
             );
         },
+        onSuccess: onShareOpenChange,
     });
 
     return (
@@ -235,7 +236,8 @@ export default function AppCard(props) {
                         </div>
                     </div>
                     <div className="flex gap-1">
-                        <Button
+                        {/* Will work on that on updates */}
+                        {/* <Button
                             className={
                                 isFollowed
                                     ? "bg-transparent text-foreground border-default-200"
@@ -248,7 +250,7 @@ export default function AppCard(props) {
                             onPress={() => setIsFollowed(!isFollowed)}
                         >
                             {isFollowed ? "Unfollow" : "Follow"}
-                        </Button>
+                        </Button> */}
                         {/* control area (delete save, and update) */}
 
                         <div className="relative">
@@ -774,9 +776,6 @@ export default function AppCard(props) {
                                     isDisabled={sharePending}
                                     onPress={() => {
                                         sharePostFn();
-                                        setTimeout(() => {
-                                            onClose();
-                                        }, 1000);
                                     }}
                                     color="primary"
                                     radius="md"

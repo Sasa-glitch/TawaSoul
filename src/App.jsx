@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
 import AuthRoute from "./components/AuthRoute/AuthRoute.jsx";
 import Settings from "./components/Settings/Settings.jsx";
+import UnderProcess from "./components/UnderProcess/UnderProcess.jsx";
 
 
 
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
             {path: 'posts/:id', element: <ProtectedRoute><SinglePost /></ProtectedRoute>},
             {path: 'profile', element: <ProtectedRoute><ProfilePage /></ProtectedRoute> },
             {path: 'settings', element: <ProtectedRoute><Settings /></ProtectedRoute> },
+            {path: 'underProcess', element: <ProtectedRoute><UnderProcess /></ProtectedRoute> },
         ]
     },
     {path: '*', element: <Notfound />},
