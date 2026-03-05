@@ -70,12 +70,12 @@ export default function Register() {
             }, 1000);
         })
         .catch(err => {
-            console.error(err);
+            console.error("error here",err.response.data.errors);
             console.error(err.response.data);
-            setErrorInSign(err.response.data.error);
+            setErrorInSign(err.response.data.errors);
             setTimeout(() => {
                 setErrorInSign(false);
-            }, 1000);
+            }, 4000);
         })
         .finally(() => {
             setIsSubmitting(false);
@@ -102,7 +102,7 @@ export default function Register() {
                         </h1>
                         <p className="text-xs mb-3 lg-mb-0 lg:text-2xl">Secure your place in the digital oasis.</p>
                         {signedUp && <div className="bg-green-700 text-white p-4 rounded-3xl">You Have Been Signed Up</div>}
-                        {errorInSign && <div className="bg-red-700 text-white p-4 rounded-3x">{errorInSign}</div>}
+                        {errorInSign && <div className="bg-red-700 text-white p-4 rounded-3xl">{errorInSign}</div>}
                         <form
                             onSubmit={handleSubmit(submitForm)}
                             className= "mt-3"
