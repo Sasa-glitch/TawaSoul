@@ -43,8 +43,9 @@ export default function Home() {
     return (
         <>
             <div className="grid gap-4 xl:grid-cols-[240px_minmax(0,1fr)_300px]">
-                <aside className="hidden h-fit space-y-3 xl:sticky xl:top-21 xl:block">
+                <aside className="h-fit space-y-3 xl:sticky xl:top-21 xl:block">
                     <div className="rounded-2xl border border-slate-200 bg-background-light p-3 shadow-sm dark:border-white/10 dark:bg-background-dark">
+                        <h1 className="text-primary">What Do You Want To See...?</h1>
                         <button
                             onClick={() => {setShow(feedEP); window.scrollTo({top:0, behavior: "smooth"})}}
                             className={`cursor-pointer flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-bold transition ${show === feedEP ? "bg-primary/10 text-primary" : "text-default-700  hover:bg-slate-100 dark:hover:bg-white/5"} `}
